@@ -1,0 +1,7 @@
+{
+  "name": "@aihot/data-demand",
+  "private": true,
+  "type": "module",
+  "exports": { "./*": "./*.ts", "./web": "./web.tsx" },
+  "dependencies": { "@aihot/backend": "*", "@aihot/contracts": "*", "@aihot/site": "*", "zod": "4.6.5" }
+}

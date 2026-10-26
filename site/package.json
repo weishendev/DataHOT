@@ -1,0 +1,17 @@
+{
+  "name": "@aihot/site",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./site.ts",
+    "./models": "./models.ts",
+    "./data-demand": "./data-demand.ts",
+    "./modules": "./modules/index.ts",
+    "./modules/server": "./modules/server.ts",
+    "./modules/web": "./modules/web.ts",
+    "./pages/*": "./pages/*",
+    "./brand/*": "./brand/*"
+  },
+  "dependencies": { "@aihot/data-demand": "*", "@aihot/industry": "*" }
+}

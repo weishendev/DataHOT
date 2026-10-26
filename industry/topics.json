@@ -1,0 +1,380 @@
+{
+  "groups": [
+    {
+      "key": "company",
+      "name": "公司与机构",
+      "blurb": "按榜单机构、数据服务商与模型厂商追踪"
+    },
+    {
+      "key": "field",
+      "name": "评测方向",
+      "blurb": "按领域深挖：代码、Agent、多模态、数据标注……"
+    },
+    {
+      "key": "genre",
+      "name": "内容形态",
+      "blurb": "按内容类型浏览：新基准、成绩、数据集、工具……"
+    }
+  ],
+  "topics": [
+    {
+      "slug": "openai",
+      "name": "OpenAI",
+      "group": "company",
+      "entityId": "openai",
+      "definition": "OpenAI 的模型与榜单表现：GPT 系列、ChatGPT 与各家基准上的分数变化。",
+      "aliases": [
+        "ChatGPT",
+        "Sora",
+        "Codex"
+      ]
+    },
+    {
+      "slug": "anthropic",
+      "name": "Anthropic",
+      "group": "company",
+      "entityId": "anthropic",
+      "definition": "Anthropic 的模型与评测动态：Claude 系列、Claude Code 与各家基准上的表现。",
+      "aliases": [
+        "Claude",
+        "Claude Code"
+      ]
+    },
+    {
+      "slug": "google",
+      "name": "Google / Gemini",
+      "group": "company",
+      "entityId": "google",
+      "aliases": [
+        "DeepMind",
+        "Gemini"
+      ],
+      "definition": "Google 与 DeepMind 的模型、评测与数据动向：Gemini 系列、Veo、研究发布与榜单成绩。"
+    },
+    {
+      "slug": "deepseek",
+      "name": "DeepSeek",
+      "group": "company",
+      "entityId": "deepseek",
+      "definition": "DeepSeek（深度求索）的模型发布、开源权重与外部榜上的成绩。",
+      "aliases": [
+        "深度求索"
+      ]
+    },
+    {
+      "slug": "qwen",
+      "name": "千问 Qwen",
+      "group": "company",
+      "entityId": "qwen",
+      "definition": "阿里千问 Qwen 系列的开源发布与评测表现。",
+      "aliases": [
+        "通义",
+        "千问"
+      ]
+    },
+    {
+      "slug": "kimi",
+      "name": "Kimi / 月之暗面",
+      "group": "company",
+      "entityId": "kimi",
+      "definition": "月之暗面 Kimi 系列模型与评测动态。"
+    },
+    {
+      "slug": "minimax",
+      "name": "MiniMax",
+      "group": "company",
+      "entityId": "minimax",
+      "definition": "MiniMax 的模型发布与榜单表现。"
+    },
+    {
+      "slug": "zhipu",
+      "name": "智谱 GLM",
+      "group": "company",
+      "entityId": "zhipu",
+      "definition": "智谱 GLM 系列的模型发布与评测动态。"
+    },
+    {
+      "slug": "xai",
+      "name": "xAI / Grok",
+      "group": "company",
+      "entityId": "xai",
+      "definition": "xAI 与 Grok 系列的模型、榜单与公司动态。",
+      "aliases": [
+        "Grok"
+      ]
+    },
+    {
+      "slug": "meta",
+      "name": "Meta / Llama",
+      "group": "company",
+      "entityId": "meta",
+      "definition": "Meta 的模型发布与评测表现：Llama 系列与自家评测口径。",
+      "aliases": [
+        "Llama"
+      ]
+    },
+    {
+      "slug": "microsoft",
+      "name": "Microsoft",
+      "group": "company",
+      "entityId": "microsoft",
+      "definition": "微软的模型、评测与数据相关动作：Copilot、Azure 与研究发布。",
+      "aliases": [
+        "Copilot"
+      ]
+    },
+    {
+      "slug": "nvidia",
+      "name": "NVIDIA 英伟达",
+      "group": "company",
+      "entityId": "nvidia",
+      "definition": "英伟达在推理与评测侧的动向：Nemotron 系列、硬件与基准成绩。"
+    },
+    {
+      "slug": "hugging-face",
+      "name": "Hugging Face",
+      "group": "company",
+      "entityId": "hugging-face",
+      "definition": "Hugging Face 的模型与数据集动态：热门榜单、数据集发布与开源生态。"
+    },
+    {
+      "slug": "cursor",
+      "name": "Cursor",
+      "group": "company",
+      "entityId": "cursor",
+      "definition": "Cursor（Anysphere）的编码 Agent 动态与自家评测口径。"
+    },
+    {
+      "slug": "openrouter",
+      "name": "OpenRouter",
+      "group": "company",
+      "entityId": "openrouter",
+      "definition": "OpenRouter 的模型上架、用量排行与真实调用侧信号。"
+    },
+    {
+      "slug": "epoch-ai",
+      "name": "Epoch AI",
+      "group": "company",
+      "entityId": "epoch-ai",
+      "definition": "Epoch AI 的基准与数据工作：能力指数、算力统计与评测方法讨论。"
+    },
+    {
+      "slug": "lmarena",
+      "name": "LMArena",
+      "group": "company",
+      "entityId": "lma-arena",
+      "definition": "LMArena（原 LMSYS Chatbot Arena）的榜单变化、投票机制与相关争议。"
+    },
+    {
+      "slug": "artificial-analysis",
+      "name": "Artificial Analysis",
+      "group": "company",
+      "entityId": "artificial-analysis",
+      "definition": "Artificial Analysis 的模型对比：速度、成本与质量的独立测量。"
+    },
+    {
+      "slug": "scale-ai",
+      "name": "Scale AI",
+      "group": "company",
+      "entityId": "scale-ai",
+      "definition": "Scale AI 的数据标注与评测业务动态：对外评测、数据交付与公司进展。"
+    },
+    {
+      "slug": "surge-ai",
+      "name": "Surge AI",
+      "group": "company",
+      "entityId": "surge-ai",
+      "definition": "Surge AI 的标注供给与数据服务动态。"
+    },
+    {
+      "slug": "mercor",
+      "name": "Mercor",
+      "group": "company",
+      "entityId": "mercor",
+      "definition": "Mercor 的专家数据与标注供给动态。"
+    },
+    {
+      "slug": "agent",
+      "name": "Agent 评测",
+      "group": "field",
+      "tags": [
+        "Agent 评测"
+      ],
+      "definition": "衡量智能体能否自主完成任务：环境、任务集、评分方式与各家的 Agent 榜单。"
+    },
+    {
+      "slug": "coding-eval",
+      "name": "代码评测",
+      "group": "field",
+      "tags": [
+        "代码评测"
+      ],
+      "definition": "代码生成与修复怎么被衡量：SWE-bench、HumanEval 一类基准的版本、口径与成绩。"
+    },
+    {
+      "slug": "multimodal-eval",
+      "name": "多模态评测",
+      "group": "field",
+      "tags": [
+        "多模态评测"
+      ],
+      "definition": "图像、视频与音频能力的衡量：多模态基准、评测集与图文一致性检查。"
+    },
+    {
+      "slug": "long-context",
+      "name": "长上下文",
+      "group": "field",
+      "tags": [
+        "长上下文"
+      ],
+      "definition": "长文本能力怎么测：上下文窗口、检索召回与长文档任务基准。"
+    },
+    {
+      "slug": "math-reasoning",
+      "name": "数学与推理",
+      "group": "field",
+      "tags": [
+        "数学推理"
+      ],
+      "definition": "数学与逻辑推理的衡量：竞赛题基准、推理链评分与分数上限的争议。"
+    },
+    {
+      "slug": "safety-eval",
+      "name": "安全评测",
+      "group": "field",
+      "tags": [
+        "安全评测"
+      ],
+      "definition": "安全与对齐的评测方法：越狱集、红队基准、拒绝率与治理要求。"
+    },
+    {
+      "slug": "chinese-eval",
+      "name": "中文评测",
+      "group": "field",
+      "tags": [
+        "中文评测"
+      ],
+      "definition": "中文能力怎么被衡量：中文基准、方言与文化题、国内榜单。"
+    },
+    {
+      "slug": "data-quality",
+      "name": "标注与合成数据",
+      "group": "field",
+      "tags": [
+        "数据标注",
+        "合成数据"
+      ],
+      "definition": "数据从哪里来：标注流程、众包质量、合成数据与数据清洗的方法和供给。"
+    },
+    {
+      "slug": "data-license",
+      "name": "数据许可",
+      "group": "field",
+      "tags": [
+        "数据许可"
+      ],
+      "definition": "数据能不能用：许可条款、版权诉讼、爬取边界与商用限制。"
+    },
+    {
+      "slug": "contamination",
+      "name": "基准污染",
+      "group": "field",
+      "tags": [
+        "基准污染"
+      ],
+      "definition": "题目泄漏与过拟合：测试集污染、训练数据重叠与榜单可信度讨论。"
+    },
+    {
+      "slug": "eval-method",
+      "name": "榜单方法与复现",
+      "group": "field",
+      "tags": [
+        "榜单方法",
+        "复现"
+      ],
+      "definition": "怎么评才算数：LLM-as-judge、人工评审、置信区间与第三方复现。"
+    },
+    {
+      "slug": "cost-latency",
+      "name": "成本与延迟",
+      "group": "field",
+      "tags": [
+        "成本与延迟"
+      ],
+      "definition": "价格、吞吐与延迟：每百万 token 成本、推理速度与实际可用性。"
+    },
+    {
+      "slug": "new-benchmarks",
+      "name": "基准与榜单",
+      "group": "genre",
+      "tags": [
+        "基准发布",
+        "新基准"
+      ],
+      "definition": "新的尺子：新基准、新榜单上线、题库与评测协议换版。"
+    },
+    {
+      "slug": "score-updates",
+      "name": "成绩变化",
+      "group": "genre",
+      "tags": [
+        "成绩更新"
+      ],
+      "definition": "谁排在前面：模型在既有榜单上的分数、名次与 SOTA 变化，以及复现结果。"
+    },
+    {
+      "slug": "dataset-releases",
+      "name": "数据集",
+      "group": "genre",
+      "tags": [
+        "数据集"
+      ],
+      "definition": "数据集与评测集本身的发布、构成与版本变化。"
+    },
+    {
+      "slug": "data-engineering",
+      "name": "数据工程",
+      "group": "genre",
+      "tags": [
+        "数据工程"
+      ],
+      "definition": "把数据做出来：标注采集、合成数据、清洗与数据服务商的交付。"
+    },
+    {
+      "slug": "eval-tools",
+      "name": "评测工具",
+      "group": "genre",
+      "tags": [
+        "工具"
+      ],
+      "definition": "评测用的工具与平台：框架、harness、LLM-as-judge 与榜单网站。"
+    },
+    {
+      "slug": "industry-events",
+      "name": "行业动态",
+      "group": "genre",
+      "tags": [
+        "行业动态"
+      ],
+      "definition": "这个行业的商业与规则：融资、人事、政策、合作与真实事故。"
+    },
+    {
+      "slug": "commentary",
+      "name": "观察与教程",
+      "group": "genre",
+      "tags": [
+        "观察"
+      ],
+      "definition": "怎么做、怎么看：教程、复现笔记、方法论讨论与访谈观点。"
+    },
+    {
+      "slug": "open-source",
+      "name": "开源",
+      "group": "genre",
+      "tags": [
+        "开源"
+      ],
+      "definition": "开源的数据、工具与权重：仓库发布、许可与社区动向。"
+    }
+  ]
+}

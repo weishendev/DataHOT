@@ -1,0 +1,1610 @@
+{
+  "$comment": "信源：首次启动时导入（scripts/seed.ts），已存在的不会被覆盖。之后在后台「信源」里新建、修改和暂停。字段说明见 docs/customize.md。2026-10-20 清空示范信源，清空前的文件与数据库备份在 .data/backups/。",
+  "sources": [
+    {
+      "id": "rss-openai-news",
+      "name": "OpenAI News",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://openai.com/news/rss.xml",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "openai",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-google-deepmind",
+      "name": "Google DeepMind",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://deepmind.google/blog/rss.xml",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "google",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-hugging-face",
+      "name": "Hugging Face Blog",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://huggingface.co/blog/feed.xml",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "hugging-face",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方",
+        "开源"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-mistral",
+      "name": "Mistral AI",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://mistral.ai/news/rss",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-epoch-ai",
+      "name": "Epoch AI",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://epoch.ai/atom.xml",
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "epoch-ai",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-metr",
+      "name": "METR",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://metr.org/feed.xml",
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-arc-prize",
+      "name": "ARC Prize",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://arcprize.org/feed.xml",
+        "_aihot": {
+          "initialBackfillLimit": 12
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-lighteval-releases",
+      "name": "lighteval：GitHub Releases",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://github.com/huggingface/lighteval/releases.atom",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "hugging-face",
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "官方",
+        "开源",
+        "工具"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-lm-eval-harness-releases",
+      "name": "lm-evaluation-harness：GitHub Releases",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://github.com/EleutherAI/lm-evaluation-harness/releases.atom",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "官方",
+        "开源",
+        "工具"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-openai-evals-releases",
+      "name": "OpenAI Evals：GitHub Releases",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://github.com/openai/evals/releases.atom",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "openai",
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "官方",
+        "开源",
+        "工具"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-opencompass-releases",
+      "name": "OpenCompass：GitHub Releases",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://github.com/open-compass/opencompass/releases.atom",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "官方",
+        "开源",
+        "工具"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-swe-bench-releases",
+      "name": "SWE-bench：GitHub Releases",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://github.com/SWE-bench/SWE-bench/releases.atom",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "官方",
+        "开源",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-ai-snake-oil",
+      "name": "AI Snake Oil",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.aisnakeoil.com/feed",
+        "_aihot": {
+          "initialBackfillLimit": 6
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "Newsletter",
+        "观点"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-import-ai",
+      "name": "Import AI",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://importai.substack.com/feed",
+        "_aihot": {
+          "initialBackfillLimit": 6
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "Newsletter"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-interconnects",
+      "name": "Interconnects",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.interconnects.ai/feed",
+        "_aihot": {
+          "initialBackfillLimit": 6
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "Newsletter",
+        "观点"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-latent-space",
+      "name": "Latent Space",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.latent.space/feed",
+        "_aihot": {
+          "initialBackfillLimit": 6
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "Newsletter"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-dont-worry-about-the-vase",
+      "name": "Don't Worry About the Vase",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://thezvi.wordpress.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 6
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "Newsletter",
+        "观点"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-arxiv-contamination",
+      "name": "arXiv：数据污染关键词搜索",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://export.arxiv.org/api/query?search_query=all:%22data+contamination%22&sortBy=submittedDate&sortOrder=descending&max_results=40",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "论文"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-arxiv-llm-evaluation",
+      "name": "arXiv：LLM 评测关键词搜索",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "http://export.arxiv.org/api/query?search_query=all:%22LLM+evaluation%22&sortBy=submittedDate&sortOrder=descending&max_results=40",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "论文"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-hacker-news-front",
+      "name": "Hacker News 首页",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://news.ycombinator.com/rss",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "hot_signal",
+      "interval_minutes": 120,
+      "tags": [
+        "社区"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-reddit-local-llama",
+      "name": "Reddit r/LocalLLaMA",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.reddit.com/r/LocalLLaMA/.rss",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "hot_signal",
+      "interval_minutes": 120,
+      "tags": [
+        "社区"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-ithome",
+      "name": "IT之家",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.ithome.com/rss/",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-qbitai",
+      "name": "量子位",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.qbitai.com/feed",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-techcrunch-ai",
+      "name": "TechCrunch · AI",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://techcrunch.com/category/artificial-intelligence/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-the-decoder",
+      "name": "The Decoder",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://the-decoder.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-the-rundown",
+      "name": "The Rundown",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.therundown.ai/feed",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "媒体",
+        "Newsletter"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-venturebeat-ai",
+      "name": "VentureBeat · AI",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://venturebeat.com/category/ai/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "enabled": false,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "json-hf-daily-papers",
+      "name": "Hugging Face Daily Papers",
+      "kind": "json_list",
+      "config": {
+        "url": "https://huggingface.co/api/daily_papers",
+        "mode": "json_api",
+        "titlePaths": [
+          "title",
+          "paper.title"
+        ],
+        "urlTemplate": "https://huggingface.co/papers/{paper.id}",
+        "summaryPaths": [
+          "summary",
+          "paper.summary"
+        ],
+        "publishedAtPath": "publishedAt",
+        "externalIdPath": "paper.id",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "hugging-face",
+      "participation_mode": "editorial",
+      "interval_minutes": 360,
+      "tags": [
+        "论文",
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "json-hn-benchmark",
+      "name": "Hacker News：benchmark 关键词流",
+      "kind": "json_list",
+      "config": {
+        "url": "https://hn.algolia.com/api/v1/search_by_date?query=benchmark&tags=story&hitsPerPage=40",
+        "mode": "json_api",
+        "itemsPath": "hits",
+        "titlePaths": [
+          "title"
+        ],
+        "urlTemplate": "{raw:url}",
+        "publishedAtPath": "created_at",
+        "externalIdPath": "objectID",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "hot_signal",
+      "interval_minutes": 180,
+      "tags": [
+        "社区"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-openai",
+      "name": "X：OpenAI (@OpenAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:OpenAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "openai",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-anthropic",
+      "name": "X：Anthropic (@AnthropicAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AnthropicAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "anthropic",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-google-deepmind",
+      "name": "X：Google DeepMind (@GoogleDeepMind)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GoogleDeepMind -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "google",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-meta-ai",
+      "name": "X：Meta AI (@AIatMeta)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AIatMeta -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "meta",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-epoch-ai",
+      "name": "X：Epoch AI (@EpochAIResearch)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:EpochAIResearch -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "epoch-ai",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-arc-prize",
+      "name": "X：ARC Prize (@arcprize)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:arcprize -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-metr",
+      "name": "X：METR (@METR_Evals)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:METR_Evals -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-artificial-analysis",
+      "name": "X：Artificial Analysis (@ArtificialAnlys)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ArtificialAnlys -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "artificial-analysis",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-lmarena",
+      "name": "X：LMArena (@arena)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:arena -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "lma-arena",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-hugging-face",
+      "name": "X：Hugging Face (@huggingface)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:huggingface -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "hugging-face",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-scale-ai",
+      "name": "X：Scale AI (@scale_AI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:scale_AI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "scale-ai",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-spacexai",
+      "name": "X：SpaceXAI (@SpaceXAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SpaceXAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "xai",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-akhaliq",
+      "name": "X：AK (@_akhaliq)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:_akhaliq -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person"
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "个人"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-fchollet",
+      "name": "X：François Chollet (@fchollet)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:fchollet -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person"
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "个人"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-natolambert",
+      "name": "X：Nathan Lambert (@natolambert)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:natolambert -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person"
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "个人"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-sayashk",
+      "name": "X：Sayash Kapoor (@sayashk)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:sayashk -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person"
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "个人"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-simonw",
+      "name": "X：Simon Willison (@simonw)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:simonw -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person"
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "个人"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-anthropic-news",
+      "name": "Anthropic News",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.anthropic.com/news",
+        "parseMode": "html",
+        "itemSelector": "article[class*='FeaturedGrid']",
+        "linkSelector": "a[href]:not([href='/news/announcements'])",
+        "titleSelector": "h2, h3, h4",
+        "publishedAtSelector": "time",
+        "allowUrlPrefixes": [
+          "https://www.anthropic.com/"
+        ],
+        "denyUrlPrefixes": [
+          "https://www.anthropic.com/news/announcements"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "anthropic",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-uk-aisi",
+      "name": "UK AISI Blog",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.aisi.gov.uk/blog",
+        "parseMode": "html",
+        "itemSelector": "a[href^='/blog/']",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "allowUrlPrefixes": [
+          "https://www.aisi.gov.uk/blog/"
+        ],
+        "detail": {
+          "maxFetches": 20,
+          "publishedAtSelector": "meta[property='article:published_time']"
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "官方",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-cais",
+      "name": "CAIS（Center for AI Safety）",
+      "kind": "web_list",
+      "config": {
+        "url": "https://safe.ai/blog",
+        "parseMode": "html",
+        "itemSelector": "a[href^='/blog/']",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "allowUrlPrefixes": [
+          "https://safe.ai/blog/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "官方",
+        "安全"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-scale-ai",
+      "name": "Scale AI Blog",
+      "kind": "web_list",
+      "config": {
+        "url": "https://scale.com/blog",
+        "parseMode": "html",
+        "itemSelector": "a[href^='/blog/']",
+        "linkSelector": "a",
+        "titleSelector": "h3, h2",
+        "allowUrlPrefixes": [
+          "https://scale.com/blog/"
+        ],
+        "detail": {
+          "maxFetches": 20,
+          "publishedAtSelector": "meta[property='article:published_time']"
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "scale-ai",
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "官方",
+        "数据"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-artificial-analysis",
+      "name": "Artificial Analysis 文章",
+      "kind": "web_list",
+      "config": {
+        "url": "https://artificialanalysis.ai/articles",
+        "parseMode": "html",
+        "itemSelector": "a[href^='/articles/']",
+        "linkSelector": "a",
+        "titleSelector": "h3, h2",
+        "publishedAtSelector": "p",
+        "allowUrlPrefixes": [
+          "https://artificialanalysis.ai/articles/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": "artificial-analysis",
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "官方",
+        "评测"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-the-batch",
+      "name": "The Batch（DeepLearning.AI）",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.deeplearning.ai/the-batch/",
+        "parseMode": "html",
+        "itemSelector": "article.card",
+        "linkSelector": "a[href^='/the-batch/']:not([href^='/the-batch/tag/'])",
+        "titleSelector": "h2, h3",
+        "publishedAtSelector": "span",
+        "allowUrlPrefixes": [
+          "https://www.deeplearning.ai/the-batch/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 180,
+      "tags": [
+        "Newsletter"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-aihot-news",
+      "name": "AIHOT 精选",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://aihot.news/feed.xml",
+        "_aihot": {
+          "initialBackfillLimit": 20
+        }
+      },
+      "tier": "T1",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "聚合",
+        "精选"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mistral",
+      "name": "X：Mistral AI (@MistralAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MistralAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-eleutherai",
+      "name": "X：EleutherAI (@AiEleuther)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AiEleuther -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-opencompass",
+      "name": "X：OpenCompass (@OpenCompass)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:OpenCompass -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-swe-bench",
+      "name": "X：SWE-bench (@swebench)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:swebench -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-uk-aisi",
+      "name": "X：UK AISI (@AISecurityInst)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AISecurityInst -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-cais",
+      "name": "X：CAIS (@cais)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:cais -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-surge-ai",
+      "name": "X：Surge AI (@HelloSurgeAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:HelloSurgeAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mercor",
+      "name": "X：Mercor (@mercor)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:mercor -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-handshake",
+      "name": "X：Handshake AI (@joinHandshake)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:joinHandshake -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-turing",
+      "name": "X：Turing (@turingcom)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:turingcom -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-labelbox",
+      "name": "X：Labelbox (@labelbox)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:labelbox -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-snorkel",
+      "name": "X：Snorkel AI (@snorkelai)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:snorkelai -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-together",
+      "name": "X：Together AI (@togethercompute)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:togethercompute -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-commoncrawl",
+      "name": "X：Common Crawl (@commoncrawl)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:commoncrawl -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-vals",
+      "name": "X：Vals AI (@ValsAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ValsAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-apollo",
+      "name": "X：Apollo Research (@ApolloResearch)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ApolloResearch -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-gray-swan",
+      "name": "X：Gray Swan AI (@GraySwanAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GraySwanAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-prime-intellect",
+      "name": "X：Prime Intellect (@PrimeIntellect)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:PrimeIntellect -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-datology",
+      "name": "X：DatologyAI (@datologyai)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:datologyai -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-invisible",
+      "name": "X：Invisible Technologies (@InvTechInc)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:InvTechInc -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-prolific",
+      "name": "X：Prolific (@Prolific)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Prolific -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ai2",
+      "name": "X：Ai2 (@allen_ai)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:allen_ai -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mlcommons",
+      "name": "X：MLCommons (@MLCommons)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MLCommons -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-terminal-bench",
+      "name": "X：Terminal-Bench (@terminalbench)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:terminalbench -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方账号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    }
+  ]
+}
