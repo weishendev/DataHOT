@@ -30,6 +30,27 @@ docker compose up -d --build
 
 `docker compose` 会起五个容器：`db`（PostgreSQL 17）、`setup`（每次启动先跑数据库迁移和种子数据，然后退出）、`api`、`worker`（抓取、模型处理、定时任务）、`web`（网页）。`web` 只接收网站地址、API 地址等网页配置，通过 HTTP 读取 API；数据库、模型和管理员密钥，以及数据卷，只交给后端容器。
 
+### Docker 开发模式
+
+本机开发使用独立的 Compose 配置，首次启动会安装镜像内的开发依赖：
+
+```bash
+npm run dev:docker
+```
+
+打开 `http://localhost:3000`，后台仍在 `/admin`。前端通过 Vite 热更新，API 和 worker 通过 Node `--watch` 在导入的代码变化后自动重启，修改普通代码不需要重新构建或运行 Compose。源代码挂载到容器，Linux 依赖保留在容器自己的卷里，不使用宿主机的 `node_modules`。
+
+修改 `package.json`、`package-lock.json` 或 `Dockerfile` 后重新运行 `npm run dev:docker`，更新镜像与依赖卷；修改 `.env` 后同样重新运行以加载新环境变量。新增迁移后运行 `docker compose -f docker-compose.dev.yml run --rm setup`；通过文件读取的提示词等配置改动后，可用 `docker compose -f docker-compose.dev.yml restart api worker` 重新加载。
+
+```bash
+npm run dev:docker:logs   # 查看日志
+npm run dev:docker:stop   # 停止，保留开发数据
+```
+
+开发环境使用 `datahot-dev` 项目及独立的数据库和文件卷，首次是空库，不影响生产 Compose 的数据。开发配置覆盖 `.env`，关闭采集、模型调用、飞书推送和 IndexNow；网页容器只接收站点与 API 地址。生产环境和开发环境默认都用 3000 端口，切换前先停止另一套服务（生产环境用 `docker compose stop api worker web`）。
+
+已有站点切换到开发模式后，需要先复制存量数据才能看到原内容。先分别备份原站和开发库，再停止开发 API、worker、web，用原站 `pg_dump --exclude-schema=pgboss` 的快照恢复开发库，并复制文件卷，随后运行 setup 并启动开发服务。原站数据保留，开发数据之后独立变化；出现空页面时先核对数据库连接和数据卷。不要直接共用 PostgreSQL 的数据目录，也不要把备份提交到 Git。
+
 ### 在中国大陆的服务器上
 
 - 构建时 npm 走国内镜像：`docker compose build --build-arg NPM_REGISTRY=https://registry.npmmirror.com`，然后 `docker compose up -d`。
@@ -272,6 +293,6 @@ cd apps/web && NODE_ENV=production node --env-file=../../.env server.ts   # 网�
 
 ## DataHOT 数据需求周报模块
 
-本次升级新增四个模块表（抽取缓存、周报、月度费用预留和平台资产观察），保留原有文章、信源、分类与日报周报数据。随正常迁移安装，Docker 构建包含模块包。采集开启后，模块会建立 79 个 HF 组织的模型/数据集监控项及 50 个 GitHub 组织监控项，均为免费公开 API；在原有信源后台暂停或调整周期，不会新增 X 账户。
+本次升级新增四个模块表（抽取缓存、周报、月度费用预留和平台资产观察），保留原有文章、信源、分类与日报周报数据。随正常迁移安装，Docker 构建包含模块包。采集开启后，模块会建立 79 个 HF 组织的模型/数据集监控项及 50 个 GitHub 账号监控项（组织或个人），均为免费公开 API；在原有信源后台暂停或调整周期，不会新增 X 账户。
 
 该模块复用现有 DeepSeek 主账号（`LLM_BASE_URL` / `LLM_API_KEY`），无需新密钥。月度默认预留上限为 10 元，模型与价格见 `site/models.ts`、`site/data-demand.ts`。后台可分别检查抽取和周报步骤的 token 用量。首次可手动执行 `node modules/data-demand/scripts/compose.ts` 补最近一期；没有窗口内材料时等待下一周。更多口径和运维说明见 [模块文档](../modules/data-demand/README.md)。

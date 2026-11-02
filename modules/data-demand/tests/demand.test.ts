@@ -80,6 +80,13 @@ test('one fact is counted once and the first issue does not invent growth', () =
   assert.equal(groupSignals([s], [], [])[0].change, 'new');
 });
 
+test('an oversized institution list keeps at most five grounded names without discarding a valid response', () => {
+  const names = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
+  const parsed = ExtractionSchema.parse({ articles: [{ articleId: 'one', signals: [{ ...signal, organizations: ['Invented', ...names] }] }] });
+  const [row] = validateExtraction([{ id: 'one', revision: 1, fact_key: 'fact:1', title: 'Source', summary: `${EVIDENCE} ${names.join(' ')}`, material: '' }], parsed, []);
+  assert.deepEqual(row.signals[0].organizations, names.slice(0, 5));
+});
+
 test('a long literal quote becomes a short verified excerpt without paying for another batch', () => {
   const evidence = 'Continuous source quotation. '.repeat(12);
   const parsed = ExtractionSchema.parse({ articles: [{ articleId: 'one', signals: [{ ...signal, evidence }] }] });
@@ -141,6 +148,63 @@ test('withdrawal removes dependent signals, type rows and synthesized findings',
     assert.equal(page.report?.groups.length, 0);
     assert.equal(page.report?.removed, 1);
     assert.equal(provider.hits(), 2);
+  } finally { await provider.close(); }
+});
+
+test('findings can cite supplied aggregate signals beyond the brief while invented references are dropped', async () => {
+  for (let i = 0; i < 31; i++) await material();
+  let aggregateId: string | undefined;
+  const provider = await stub((_hit, req) => {
+    const input = JSON.parse(JSON.parse(req.body).messages[1].content);
+    if (input.articles) {
+      const result = { articles: input.articles.map((a: { id: string }) => ({ articleId: a.id, signals: [signal] })) };
+      return { choices: [{ message: { content: JSON.stringify(result) } }] };
+    }
+    assert.equal(input.coverage.current.analysed, 31);
+    assert.equal(input.coverage.previous, null);
+    const briefIds = new Set(input.signals.map((s: { id: string }) => s.id));
+    aggregateId = input.changes.flatMap((g: { signalIds: string[] }) => g.signalIds).find((id: string) => !briefIds.has(id));
+    assert.ok(aggregateId);
+    return { choices: [{ message: { content: JSON.stringify({ findings: [
+      { title: '浏览器轨迹交付方向', analysis: '存在人工轨迹征集，可核实评测覆盖与验收条件。', signalIds: [aggregateId] },
+      { title: '无依据的结论', analysis: '此条引用并不在输入中。', signalIds: ['invented:0'] },
+    ] }) } }] };
+  });
+  pointModels(provider.url, ['data-demand-flash', 'data-demand-pro']);
+  try {
+    await composeDemandWeek(WEEK, NOW);
+    const page = await loadModulePage('data-demand', WEEK) as DemandPage;
+    assert.equal(page.report?.findings.length, 1);
+    assert.deepEqual(page.report?.findings[0].signalIds, [aggregateId]);
+  } finally { await provider.close(); }
+});
+
+test('explicit refresh uses newly collected materials and keeps the published issue if generation fails', async () => {
+  const firstId = await material();
+  const provider = await modelStub();
+  try {
+    await composeDemandWeek(WEEK, NOW);
+    const secondId = await material('2026-10-21T01:00:00Z');
+    assert.equal((await composeDemandWeek(WEEK, NOW)).status, 'exists');
+    assert.equal(provider.hits(), 2);
+    assert.equal((await loadModulePage('data-demand', WEEK) as DemandPage).report?.stats.analysed, 1);
+    const refreshedAt = new Date('2026-10-26T01:00:00Z');
+    assert.equal((await composeDemandWeek(WEEK, refreshedAt, { refresh: true })).status, 'published');
+    const refreshed = (await loadModulePage('data-demand', WEEK) as DemandPage).report!;
+    assert.equal(refreshed.stats.analysed, 2);
+    assert.deepEqual(new Set(refreshed.signals.map((s) => s.articleId)), new Set([firstId, secondId]));
+    assert.equal(refreshed.generatedAt, refreshedAt.toISOString());
+    assert.equal(provider.hits(), 4);
+    const calls = provider.hits();
+    const [spent] = await sql`SELECT reserved_cny FROM data_demand_budget`;
+    await composeDemandWeek(WEEK, refreshedAt, { refresh: true });
+    assert.equal(provider.hits(), calls);
+    await material();
+    await sql`UPDATE data_demand_budget SET reserved_cny = 10`;
+    await assert.rejects(composeDemandWeek(WEEK, refreshedAt, { refresh: true }), /预留上限/);
+    assert.deepEqual((await loadModulePage('data-demand', WEEK) as DemandPage).report, refreshed);
+    assert.equal(provider.hits(), calls);
+    assert.ok(Number(spent.reserved_cny) < 10);
   } finally { await provider.close(); }
 });
 

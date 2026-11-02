@@ -1,0 +1,91 @@
+# npm run dev:docker → http://localhost:3000 (source edits update running services)
+name: datahot-dev
+
+x-app: &app
+  build:
+    context: .
+    target: development
+  image: datahot-dev
+  # Keep native dependencies from the Linux image instead of the host's node_modules.
+  volumes:
+    - .:/app
+    - /app/node_modules
+    - /app/packages/backend/node_modules
+
+x-backend: &backend
+  <<: *app
+  env_file: .env
+  environment: &backend-env
+    NODE_ENV: development
+    DATABASE_URL: postgres://datahot:development@db:5432/datahot
+    AIHOT_DATA_DIR: /data
+    API_BASE_URL: http://api:3001
+    SITE_URL: http://localhost:3000
+    COLLECT_ENABLED: "false"
+    MODEL_CALLS_ENABLED: "false"
+    FEISHU_CONTENT_PUSH_ENABLED: "false"
+    FEISHU_INTERNAL_ENABLED: "false"
+    INDEXNOW_SUBMIT_ENABLED: "false"
+  volumes:
+    - .:/app
+    - /app/node_modules
+    - /app/packages/backend/node_modules
+    - data:/data
+  depends_on:
+    db:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: datahot
+      POSTGRES_PASSWORD: development
+      POSTGRES_DB: datahot
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U datahot -d datahot"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  setup:
+    <<: *backend
+    command: ["sh", "-c", "node scripts/migrate.ts && node scripts/seed.ts"]
+
+  api:
+    <<: *backend
+    command: ["node", "--watch", "apps/api/src/main.ts"]
+    environment:
+      <<: *backend-env
+      API_HOST: 0.0.0.0
+      API_PORT: "3001"
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  worker:
+    <<: *backend
+    command: ["node", "--watch", "apps/worker/src/main.ts"]
+    stop_grace_period: 210s
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  web:
+    <<: *app
+    command: ["npm", "exec", "-w", "@aihot/web", "--", "react-router", "dev", "--host", "0.0.0.0", "--port", "3000"]
+    environment:
+      NODE_ENV: development
+      API_BASE_URL: http://api:3001
+      SITE_URL: http://localhost:3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_started
+
+volumes:
+  db: {}
+  data: {}

@@ -43,13 +43,13 @@ async function candidates(start: Date, end: Date, now: Date) {
   return { rows, total: rows[0]?.total ?? 0 };
 }
 
-export async function composeDemandWeek(key: string, now = new Date()) {
+export async function composeDemandWeek(key: string, now = new Date(), opts: { refresh?: boolean } = {}) {
   const range = isoWeekRange(key);
   if (!range) throw new Error('invalid ISO week');
   const endDate = addDays(range.end, 1);
   if (now < beijingAt(endDate, '08:00')) throw new Error('数据需求周报尚未到出刊时间');
   const [saved] = await sql`SELECT key FROM data_demand_reports WHERE key = ${key}`;
-  if (saved) return { key, status: 'exists' };
+  if (saved && !opts.refresh) return { key, status: 'exists' };
   if (!config.modelCallsEnabled) return { key, status: 'disabled' };
   const start = beijingMidnight(range.start);
   const end = beijingMidnight(endDate);
@@ -98,6 +98,9 @@ export async function composeDemandWeek(key: string, now = new Date()) {
     });
     for (const row of extracted) { signals.push(...row.signals); rejected += row.rejected; }
   }
+  // Keep cached and fresh extractions in candidate order so refreshes reuse the synthesis receipt.
+  const order = new Map(input.rows.map((m, i) => [m.id, i]));
+  signals.sort((a, b) => order.get(a.articleId)! - order.get(b.articleId)! || a.id.localeCompare(b.id));
   // Limit the synthesis brief, keeping demand signals ahead of supply-only context. Every signal
   // still appears in the saved issue and its deterministic type table.
   const brief = [...signals].sort((a, b) => Number(a.kind === 'supply') - Number(b.kind === 'supply')).slice(0, 30);
@@ -106,13 +109,14 @@ export async function composeDemandWeek(key: string, now = new Date()) {
   if (brief.length) {
     const model = await modelFor('dataDemandReport');
     const user = stableJson({ week: key, baseline: previous === null,
+      coverage: { current: { analysed: input.rows.length, available: input.total }, previous: previous === null ? null : previousIssue!.stats },
       signals: brief.map(({ id, dataType, family, kind, task, evidence, implication, action }) => ({ id, dataType, family, kind, task, evidence, implication, action })),
       changes: groupSignals(signals, previous, known) });
     const maxTokens = 1800;
     const allowance = callAllowance(model, REPORT_PROMPT, user, maxTokens);
     const result = await chatJson({ model, purpose: 'data_demand_report', subject: key, promptVersion: REPORT_VERSION,
       system: REPORT_PROMPT, user, schema: FindingsSchema, maxTokens, beforeCall: () => reserveBudget(allowance, now) });
-    const ids = new Set(brief.map((s) => s.id));
+    const ids = new Set(signals.map((s) => s.id));
     findings = result.data.findings.filter((f) => f.signalIds.every((id) => ids.has(id)));
     receiptId = result.receiptId;
   }
@@ -121,7 +125,9 @@ export async function composeDemandWeek(key: string, now = new Date()) {
     stats: { available: input.total, analysed: input.rows.length, rejected, limited: input.total > input.rows.length } };
   await sql.begin(async (tx) => {
     await tx`INSERT INTO data_demand_reports (key, window_start, window_end, content, generated_at)
-      VALUES (${key}, ${start}, ${end}, ${tx.json(content as never)}, ${now}) ON CONFLICT (key) DO NOTHING`;
+      VALUES (${key}, ${start}, ${end}, ${tx.json(content as never)}, ${now})
+      ON CONFLICT (key) DO UPDATE SET content = EXCLUDED.content, generated_at = EXCLUDED.generated_at
+      WHERE ${opts.refresh === true}`;
     if (receiptId !== null) await completeReceipt(tx, receiptId);
   });
   return { key, status: 'published', signals: signals.length, analysed: input.rows.length };

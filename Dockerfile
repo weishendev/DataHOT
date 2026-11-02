@@ -7,7 +7,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends postgresql-client ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-FROM base AS build
+FROM base AS dependencies
 ARG NPM_REGISTRY=
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
@@ -19,6 +19,17 @@ COPY industry/package.json industry/
 COPY site/package.json site/
 COPY modules/data-demand/package.json modules/data-demand/
 RUN npm ci --no-audit --no-fund ${NPM_REGISTRY:+--registry=$NPM_REGISTRY}
+
+# Development mounts the source tree and keeps Linux dependencies inside the container.
+FROM dependencies AS development
+ENV NODE_ENV=development
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git \
+ && rm -rf /var/lib/apt/lists/* \
+ && mkdir -p /data && chown node:node /data
+USER node
+
+FROM dependencies AS build
 COPY . .
 RUN npm run build -w @aihot/web && npm prune --omit=dev --no-audit --no-fund
 
