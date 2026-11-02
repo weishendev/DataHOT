@@ -403,7 +403,7 @@
       "name": "Hacker News 首页",
       "kind": "rss",
       "config": {
-        "feedUrl": "https://news.ycombinator.com/rss",
+        "feedUrl": "https://hnrss.org/frontpage",
         "_aihot": {
           "initialBackfillLimit": 20
         }

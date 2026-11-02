@@ -5,5 +5,8 @@ import server from '../server.ts';
 import { composeDemandWeek, dueWeek } from '../backend/compose.ts';
 
 installModules([server]);
-try { console.log(await composeDemandWeek(process.argv[2] ?? dueWeek(new Date()))); }
+const args = process.argv.slice(2);
+const refresh = args.includes('--refresh');
+const key = args.find((arg) => arg !== '--refresh') ?? dueWeek(new Date());
+try { console.log(await composeDemandWeek(key, new Date(), { refresh })); }
 finally { await closeDb(); }

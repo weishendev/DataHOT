@@ -2,20 +2,38 @@
 
 这是一个行业热点网站的框架：采集信源、用模型筛选和写作、归组事件、出日报周报月报，并通过网站、RSS、公开 API、Agent Markdown 和 MCP 对外提供。默认配置是一个 AI 行业的示例站。先读 README，再按任务读 `docs/` 里对应的文档。
 
-## 这个站现在的状态（2026-10-23，DataHOT）
+## 这个站现在的状态（2026-11-02，DataHOT）
 
 这是从 AIHOT 框架改出来的「AI 数据 × 评测基准」站，不再是示例站。接手的人先看这一节。
 
 - **站点**：站名 DataHOT，行业词 `AI数据和benchmark`，MCP 前缀 `datahot`，周报与日报同为 08:00。读者是 AI 数据公司的员工（数据 sourcing、标注交付、评测团队）。
 - **分类**（`industry/taxonomy.ts`）：7 类 —— benchmarks 基准 / scores 成绩 / datasets 数据集 / data-ops 数据工程 / tools 工具 / industry 行业 / commentary 观察，日报分 5 节：榜单与评测、数据与标注、工具与平台、行业动态、观察。`RELEASE` 是「新基准」，报头按它数「N 个新基准」。
 - **主题**（`industry/topics.json`）：41 个，公司 21（含 Epoch AI、LMArena、Artificial Analysis、Scale AI、Surge AI、Mercor 等 6 家新增）+ 评测方向 12 + 内容形态 8。slug 上线后不要改。
-- **信源**（`industry/sources.json`）：77 个 —— RSS 28（含 `https://aihot.news/feed.xml`，T1）、JSON 接口 2、网页列表 6、X 账号 41。没有接入的：6 个公众号（缺 ghid）、VentureBeat（Cloudflare 429，已暂停）、Stanford AI Index / State of AI / Meta AI（页面不是新闻流）。METR 的 feed 和 HN 首页在容器里抓不到。
+- **信源**（`industry/sources.json`）：77 个 —— RSS 28（含 `https://aihot.news/feed.xml`，T1）、JSON 接口 2、网页列表 6、X 账号 41。没有接入的：6 个公众号（缺 ghid）、VentureBeat（Cloudflare 429，已暂停）、Stanford AI Index / State of AI / Meta AI（页面不是新闻流）。2026-10-26 全轮抓取时 HN 官方 RSS 返回 419，已改用同一首页内容的免费镜像 `https://hnrss.org/frontpage`。
 - **精选**：`industry/prompts/selection-score.md` 已按这个行业重写（七类内容类型、五轴按「行业影响 / 新东西 / 站不站得住 / 对读者的用处 / 能不能上手」）。门槛在 `industry/selection.ts`：T1 62 / T1_5 54 / T2 62，来自 `.data/gold.jsonl` 116 条标注（90 条可判定）的校准，查准 0.885 / 查全 0.885。没有留出集。改提示词或门槛后要重跑 `scripts/eval-selection.ts`。
 - **旧数据**：库里更早的文章按旧提示词和旧分类判过，没有重算；提示词版本是内容哈希，只影响之后的新资料。
+- **数据需求模块**（`modules/data-demand/`）：`/data-demand` 展示数据需求分析周报，每周一 08:00 起生成上一自然周。HF 监控 79 个组织的模型与数据集，GitHub 监控 50 个账号（组织或个人）；扫描使用免费公开 API，分析模型每月保守预留上限 10 元。手动 `compose.ts <周> --refresh` 可更新已出刊报告，失败时保留旧版；抽取缓存和付费回执继续复用。详见模块 README。
 - **出网**（这台机器特有）：宿主机上 Node 的 DNS 会被污染，直连抓不到 Hugging Face、arXiv、HN、Reddit、Import AI 等。绕开的办法是把 `.env` 里的 `EGRESS_PROXY_URL` 打开（Docker 里写 `http://host.docker.internal:7890`），同时 `packages/backend/src/lib/egress-proxy.ts` 的 DoH 超时已从 5 秒改成 20 秒（本机代理冷启动约 7.5 秒，不改会全部超时）。`site/site.ts` 的 `DEPLOYMENT.directFetchHosts` 为 `["openai.com", "metr.org"]`，这两个直连更快。2026-10-26 已在本机 `.env` 中启用上述 Docker 代理地址；依赖宿主机的 7890 代理保持运行。X 等付费 API 仍按现有规则直连。
 - **金标文件**：`.data/gold-candidates.jsonl`（116 条，材料全文）、`.data/gold-review.csv`（给人标，`decision` 列填 s / r / e）、`.data/gold.jsonl`（评测用）。`scripts/_gold-apply.ts` 是临时脚本，把 CSV 的标注合并成 gold.jsonl，不是框架的一部分。
 - **本机跑测试**：需要一个 127.0.0.1:5432 的 postgres（本机用临时容器 `aihot-test-pg` 起）。一次 116 条的评测要 348 次模型调用，测试库的 `budgets.llm.per_minute` 要从 300 调到 3000，否则会大面积报 `Budget ... exhausted (minute)`。备份测试需要本机有 `pg_dump`，没有时会失败 8 条，与代码无关。
 - **待办**：6 个公众号等 ghid；41 个 X 源会打满 SocialData 每分钟预算，需要调额度或减源。
+
+## 本机 Docker 开发环境（2026-11-02）
+
+- **启动与停止**：`npm run dev:docker` 启动 `docker-compose.dev.yml`，访问 `http://localhost:3000`，后台 `/admin`；`npm run dev:docker:logs` 看日志，`npm run dev:docker:stop` 停止并保留数据。Docker Desktop 需要运行。生产 Compose 和开发 Compose 共用 3000 端口，切换前先停止另一套 API、worker、web。
+- **热更新**：前端使用 Vite HMR，API 和 worker 使用 Node `--watch`，修改导入的代码自动生效。修改依赖清单、lockfile 或 Dockerfile 后重跑启动命令，镜像和匿名依赖卷会更新；修改 `.env` 后也要重跑。提示词等通过文件读取的配置，改后 `docker compose -f docker-compose.dev.yml restart api worker`；新增迁移运行 `docker compose -f docker-compose.dev.yml run --rm setup`。
+- **开发安全阀**：开发 Compose 覆盖 `.env`，关闭采集、模型调用、飞书推送和 IndexNow。网页只通过 API 读内容，不接收后端凭据。开发镜像包含 Git、`pg_dump` 和 `pg_restore`，Linux 依赖留在容器内，不使用宿主机的 `node_modules`。
+- **两套数据库要分清**：原站使用 `aihot_db` / `aihot_data` 数据卷，开发使用 `datahot-dev_db` / `datahot-dev_data`。开发库默认独立建库；看到空页面时先核对实际连接的数据库，不能把切到空库误判为原数据丢失。本机开发库已从原站复制快照：3,408 篇资料、2,936 条发布记录、285 个信源、2 期数据需求周报；文件缓存也已复制。两套数据之后各自变化，不自动同步。
+- **再次同步存量**：先分别备份两套库与文件卷，再停止开发 API、worker、web，用原站 `pg_dump --exclude-schema=pgboss` 的快照恢复开发库，并复制文件卷；运行 setup 后重启开发服务。原站队列不复制，开发队列自行维护。备份放在忽略提交的 `.data/dev-snapshots/`；不要清空或删除原站数据卷来解决开发页面为空的问题。
+- **最近验证**：类型检查、前端生产构建、796 项后端测试、30 项整站冒烟和 MCP 合约检查通过；已实测前端 HMR 和 API 自动重启。前端 `article-outline.test.ts` 的经典滚动条换行断言在本机仍失败；`admin-performance.test.ts` 首次并行执行超时，单独复核通过，不要把前端测试写成全通过。
+
+Docker 内运行完整后端测试时，用独立测试库和本地假服务：
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm --no-deps \
+  -e DATABASE_URL=postgres://datahot:development@db:5432/datahot_test \
+  -e COLLECT_ENABLED=true -e MODEL_CALLS_ENABLED=true web npm test
+```
 
 ## 最常见的任务：改成另一个行业
 

@@ -95,21 +95,54 @@ test('pagination resumes without advancing its watermark; a failed page preserve
   } finally { await api.close(); }
 });
 
+for (const status of [401, 403]) test(`a restricted HF card (${status}) does not discard public metadata or the rest of the list`, async () => {
+  const api = await localApi((url) => url.pathname.includes('/raw/')
+    ? url.pathname.includes('/robot-data/') ? { status, body: 'Restricted dataset card' } : { body: '# Public annotation guidelines' }
+    : { body: [row, { ...row, id: 'allenai/open-data' }] });
+  try {
+    assert.equal((await scanRadarSource(ID, NOW, api.read)).status, 'ok');
+    assert.equal((await sql`SELECT count(*)::int AS count FROM articles WHERE source_id = ${ID}`)[0].count, 2);
+    const [restricted] = await sql`SELECT metadata FROM data_demand_assets WHERE source_id = ${ID} AND asset_id = ${row.id}`;
+    assert.equal(restricted.metadata.readme, undefined);
+    const [open] = await sql`SELECT metadata FROM data_demand_assets WHERE source_id = ${ID} AND asset_id = 'allenai/open-data'`;
+    assert.match(open.metadata.readme, /Public annotation guidelines/);
+    const [source] = await sql`SELECT health, last_error, cursor FROM sources WHERE id = ${ID}`;
+    assert.equal(source.health, 'ok');
+    assert.equal(source.last_error, null);
+    assert.equal(source.cursor.radar.watermark, NOW.toISOString());
+  } finally { await api.close(); }
+});
+
 test('GitHub filters unrelated repositories, tracks stars, and does not ingest a fork', async () => {
   const repo = { full_name: 'allenai/evaluation-kit', created_at: row.createdAt, updated_at: row.lastModified, pushed_at: row.lastModified,
     stargazers_count: 200, forks_count: 5, description: 'Agent benchmark evaluation data', topics: ['benchmark'], owner: { id: 5667695, login: 'allenai' } };
   const api = await localApi((url) => url.pathname.endsWith('/readme') ? { body: '# Evaluation kit' } : url.searchParams.has('page') ? { body: [] } : {
     body: [repo, { ...repo, full_name: 'allenai/fork', fork: true }, { ...repo, full_name: 'allenai/website', description: 'CSS templates', topics: [] }],
-    headers: { link: '<https://api.github.com/organizations/5667695/repos?page=2>; rel="next"' },
+    headers: { link: '<https://api.github.com/user/5667695/repos?page=2>; rel="next"' },
   });
   try {
     await scanRadarSource(GH, NOW, api.read);
+    assert.ok(api.hits[0]?.startsWith('/users/allenai/repos?'));
+    assert.equal(new URL(api.hits[0]!, 'https://api.github.com').searchParams.get('type'), 'owner');
     assert.equal((await sql`SELECT count(*)::int AS count FROM articles WHERE source_id = ${GH}`)[0].count, 1);
     const [saved] = await sql`SELECT metadata FROM data_demand_assets WHERE source_id = ${GH} AND asset_id = 'allenai/evaluation-kit'`;
     assert.equal(saved.metadata.metric, 200);
     assert.match((await sql`SELECT summary FROM publications WHERE source_id = ${GH}`)[0].summary, /200 stars/);
     assert.equal((await scanRadarSource(GH, NOW, api.read)).status, 'ok');
-    assert.ok(api.hits.at(-1)?.startsWith('/orgs/allenai/repos?page=2'));
+    assert.ok(api.hits.at(-1)?.startsWith('/users/allenai/repos?page=2'));
+  } finally { await api.close(); }
+});
+
+test('an unfinished organization listing resumes through the owner endpoint without losing its cursor', async () => {
+  await sql`UPDATE sources SET cursor = ${sql.json({ radar: { nextUrl: 'https://api.github.com/orgs/allenai/repos?page=2&type=public', floor: '2026-10-09T00:00:00.000Z', startedAt: NOW.toISOString() } })} WHERE id = ${GH}`;
+  const api = await localApi(() => ({ body: [] }));
+  try {
+    assert.equal((await scanRadarSource(GH, NOW, api.read)).status, 'ok');
+    const request = new URL(api.hits[0]!, 'https://api.github.com');
+    assert.equal(request.pathname, '/users/allenai/repos');
+    assert.equal(request.searchParams.get('page'), '2');
+    assert.equal(request.searchParams.get('type'), 'owner');
+    assert.equal((await sql`SELECT cursor FROM sources WHERE id = ${GH}`)[0].cursor.radar.watermark, NOW.toISOString());
   } finally { await api.close(); }
 });
 

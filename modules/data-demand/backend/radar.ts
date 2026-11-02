@@ -40,10 +40,10 @@ export async function seedRadarSources(now = new Date()) {
 }
 
 function endpoint(t: Target): URL {
-  const url = t.platform === 'github' ? new URL(`https://api.github.com/orgs/${t.org}/repos`)
+  const url = t.platform === 'github' ? new URL(`https://api.github.com/users/${t.org}/repos`)
     : new URL(`https://huggingface.co/api/${t.platform === 'hf-model' ? 'models' : 'datasets'}`);
   if (t.platform === 'github') {
-    url.searchParams.set('sort', 'updated'); url.searchParams.set('per_page', '100'); url.searchParams.set('type', 'public');
+    url.searchParams.set('sort', 'updated'); url.searchParams.set('per_page', '100'); url.searchParams.set('type', 'owner');
   } else {
     url.searchParams.set('author', t.org); url.searchParams.set('sort', 'lastModified');
     url.searchParams.set('limit', '100'); url.searchParams.set('full', 'true');
@@ -55,9 +55,10 @@ function endpoint(t: Target): URL {
 
 function checkedPage(t: Target, value: string): string {
   const url = new URL(value), base = endpoint(t);
-  if (url.origin !== base.origin || url.pathname !== base.pathname || url.username || url.password
+  const samePath = url.pathname === base.pathname || t.platform === 'github' && url.pathname === `/orgs/${t.org}/repos`;
+  if (url.origin !== base.origin || !samePath || url.username || url.password
     || t.platform !== 'github' && url.searchParams.get('author') !== t.org) throw new Error('雷达分页地址偏离当前组织');
-  if (t.platform === 'github') url.searchParams.set('type', 'public');
+  if (t.platform === 'github') { url.pathname = base.pathname; url.searchParams.set('type', 'owner'); }
   return url.toString();
 }
 
@@ -170,18 +171,19 @@ export async function scanRadarSource(sourceId: string, now = new Date(), read: 
         const card = await read(url, { headers: t.platform === 'github' ? { ...headers, accept: 'application/vnd.github.raw+json' } : headers, redirectPolicy: 'same-origin', maxBytes: 256 * 1024, timeoutMs: 20_000 });
         detailCalls++;
         if (card.status === 200) a.readme = card.text().slice(0, 5000);
-        else if (card.status !== 404) throw new Error(`雷达说明文档 HTTP ${card.status}`);
+        else if (card.status !== 404 && !(t.platform !== 'github' && [401, 403].includes(card.status))) throw new Error(`雷达说明文档 HTTP ${card.status}`);
       }
       if (await storeAsset(t, a, old, event, now)) created++;
       if (event) events++;
     }
     let link = /<([^>]+)>;\s*rel="next"/.exec(response.headers.get('link') ?? '')?.[1];
     if (link && t.platform === 'github') {
-      // GitHub's Link header canonicalizes /orgs/name/repos to /organizations/id/repos.
+      // GitHub's Link header uses numeric owner IDs; accept only this listing's verified owner.
       // Accept only the id of this response's named owner, then keep our named endpoint.
       const owner = raw.find((r: any) => r?.owner?.login?.toLowerCase() === t.org.toLowerCase())?.owner;
       const next = new URL(link);
-      if (Number.isSafeInteger(owner?.id) && next.origin === 'https://api.github.com' && next.pathname === `/organizations/${owner.id}/repos`) {
+      if (Number.isSafeInteger(owner?.id) && next.origin === 'https://api.github.com'
+        && [`/user/${owner.id}/repos`, `/organizations/${owner.id}/repos`].includes(next.pathname)) {
         next.pathname = endpoint(t).pathname;
         link = next.toString();
       }

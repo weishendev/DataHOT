@@ -9,7 +9,8 @@ const SignalSchema = z.object({
   family: z.enum(Object.keys(FAMILIES) as [Family, ...Family[]]),
   typeKey: z.string().regex(/^[a-z][a-z0-9-]{1,60}$/), dataType: z.string().min(2).max(50),
   task: z.string().min(2).max(180), kind: z.enum(['explicit', 'inferred', 'supply']),
-  organizations: z.array(z.string().min(1).max(80)).max(5), services: z.array(z.enum(['sourcing', 'annotation', 'evaluation'])).max(3),
+  // Cap names after grounding; a long model list must not discard an otherwise valid batch.
+  organizations: z.array(z.string().min(1).max(80)), services: z.array(z.enum(['sourcing', 'annotation', 'evaluation'])).max(3),
   // Real responses can quote a full English sentence despite the requested limit. Keep a
   // continuous short excerpt locally, then verify it literally against the supplied material.
   evidence: z.string().min(12).max(2000).transform((s) => s.slice(0, 180)), implication: z.string().min(4).max(500), action: z.string().min(4).max(300),
@@ -33,7 +34,7 @@ export function validateExtraction(materials: Material[], output: z.infer<typeof
       const canonical = keys.get(item.typeKey) ?? names.get(item.dataType.replace(/\s/g, '').toLowerCase());
       const kind = item.kind === 'explicit' && !/采购|招标|征集|寻求|招募|looking for|seek|request for|procurement|tender|call for/i.test(item.evidence) ? 'inferred' : item.kind;
       const signal: Signal = { ...item, kind, ...(canonical ? { typeKey: canonical.typeKey, dataType: canonical.dataType, family: canonical.family } : {}),
-        organizations: item.organizations.filter((org) => text.toLowerCase().includes(org.toLowerCase())),
+        organizations: item.organizations.filter((org) => text.toLowerCase().includes(org.toLowerCase())).slice(0, 5),
         id: `${m.id}:${i}`, articleId: m.id, revision: m.revision, factKey: m.fact_key };
       signals.push(signal);
       keys.set(signal.typeKey, signal);
